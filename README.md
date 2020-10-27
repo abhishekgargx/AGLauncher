@@ -1,5 +1,6 @@
-# AG Launcher ✅
-Yet another another android launcher
+# AG Launcher 📱
+Started working on android launcher, everyone is welcome for contribution. main goal will be using latest android best practices, while being useful for developers.
+
 
 # Screenshot 🖼️
 <p align="center" >  
