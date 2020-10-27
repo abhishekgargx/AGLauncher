@@ -11,19 +11,12 @@ import com.abhishek.aglauncher.databinding.ItemAppBinding
 /**
  * Created by Abhishek Garg on 26/10/20 - https://www.linkedin.com/in/abhishekgarg727/
  */
-public class AppAdapter(var context: Context, var appList: List<AppObject>) :
+public class AppAdapter(var context: Context, var appList: List<AppObject>, var appAdapterClicks: AppAdapterClicks) :
     RecyclerView.Adapter<AppAdapter.MyViewHolder>() {
-
-    private fun lunchApp(packageName: String) {
-        val intent: Intent? = context.packageManager.getLaunchIntentForPackage(packageName)
-        if (intent != null) {
-            context.startActivity(intent)
-        }
-    }
 
     class MyViewHolder(itemAppBinding: ItemAppBinding) :
         RecyclerView.ViewHolder(itemAppBinding.root) {
-        public val mItemAppBinding: ItemAppBinding = itemAppBinding
+        val mItemAppBinding: ItemAppBinding = itemAppBinding
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -36,11 +29,21 @@ public class AppAdapter(var context: Context, var appList: List<AppObject>) :
         val appObject = appList[position]
         holder.mItemAppBinding.icon.setImageDrawable(appObject.image)
         holder.mItemAppBinding.label.text = appObject.name
-        holder.mItemAppBinding.appItemLayout.setOnClickListener { lunchApp(appObject.packageName) }
+        holder.mItemAppBinding.appItemLayout.setOnClickListener {
+            appAdapterClicks.onItemClick(appObject)
+        }
+        holder.mItemAppBinding.appItemLayout.setOnLongClickListener {
+            appAdapterClicks.onItemLongClick(appObject)
+        }
     }
 
     override fun getItemCount(): Int {
         return appList.size
+    }
+
+    interface AppAdapterClicks{
+        fun onItemClick(appObject: AppObject)
+        fun onItemLongClick(appObject: AppObject) : Boolean
     }
 
 }

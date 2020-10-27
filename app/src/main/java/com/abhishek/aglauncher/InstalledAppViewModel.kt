@@ -3,6 +3,7 @@ package com.abhishek.aglauncher
 import android.app.WallpaperManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageInfo
 import android.content.pm.ResolveInfo
 import android.graphics.drawable.Drawable
 import androidx.lifecycle.MutableLiveData
@@ -23,6 +24,11 @@ class InstalledAppViewModel : ViewModel() {
         liveAppList.value = arrayListOf()
     }
 
+    fun updateLiveAppList(context: Context) {
+        updateInstalledAppList(context)
+        liveAppList.value = installedAppList
+    }
+
     fun updateInstalledAppList(applicationContext: Context) {
         installedAppList.clear()
         val intent = Intent(Intent.ACTION_MAIN, null)
@@ -37,12 +43,16 @@ class InstalledAppViewModel : ViewModel() {
             val appPackageName = untreatedApp.activityInfo.packageName.toString()
             val appIcon: Drawable =
                 untreatedApp.activityInfo.loadIcon(applicationContext.packageManager)
-            val appObject = AppObject(appName, appPackageName, appIcon)
+            val pInfo: PackageInfo =
+                applicationContext.getPackageManager().getPackageInfo(appPackageName, 0)
+            val versionCode = pInfo.versionCode.toString()
+            val versionName = pInfo.versionName
+            val appObject = AppObject(appName, appPackageName, appIcon, versionCode, versionName)
 
-            if (!installedAppList.contains(appObject)) installedAppList.add(appObject)
+            if (!installedAppList.contains(appObject))
+                installedAppList.add(appObject)
         }
         installedAppList.sort()
-        liveAppList.value = installedAppList
     }
 
     fun filterListUsingQuery(query: String) {
@@ -56,10 +66,10 @@ class InstalledAppViewModel : ViewModel() {
     }
 
     fun updateCurrentWallpaper(context: Context) {
-        try{
+        try {
             val wallpaperManager = WallpaperManager.getInstance(context)
             wallpaper.value = wallpaperManager.drawable
-        }catch (e : Exception){
+        } catch (e: Exception) {
             wallpaper.value = context.resources.getDrawable(R.drawable.wallpaper)
         }
     }
