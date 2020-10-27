@@ -1,4 +1,4 @@
-# AG Launcher 📱
+# <a href="https://github.com/Abhishekgarg727/AGLauncher">AG Launcher for Android 📱</a><br />
 Started working on android launcher, everyone is welcome for contribution. main goal will be using latest android best practices, while being useful for developers.
 
 
